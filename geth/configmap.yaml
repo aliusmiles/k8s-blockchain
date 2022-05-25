@@ -1,0 +1,37 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: geth
+  namespace: geth
+  labels:
+    app.kubernetes.io/name: geth
+data:
+  genesis.json: |
+    {
+      "config": {
+        "chainId": 1192,
+        "homesteadBlock": 0,
+        "eip150Block": 0,
+        "eip155Block": 0,
+        "eip158Block": 0,
+        "byzantiumBlock": 0,
+        "constantinopleBlock": 0,
+        "petersburgBlock": 0,
+        "clique": {
+          "period": 5,
+          "epoch": 30000
+        }
+      },
+      "difficulty": "1",
+      "gasLimit": "8000000",
+      "extradata": "0x0000000000000000000000000000000000000000000000000000000000000000ea7634c4c72686a52311c8b10211836080e08ee7f2cc87610691d20134993a7137709cc0dae218047c2de8462441be54ece285e2afba0ffcba6a26460000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "alloc": {}
+    }
+
+  static-nodes.json: |-
+    [
+      "enode://49df68a76ae0a009978a0ebb4cf8ef14aaaee30d88deff829091a82fed47d12d3173fa54c067937bda90b6887f54f62271141a3ca096fcd0a0896cc99f82906e@geth-0.geth.geth.svc.cluster.local:30303",
+      "enode://07903cca8cde06871119b16074d930edb5f42efb38a6ea20d1acc46d45607aae6776eb18d51941416f34b119ba0b631dbfa50a92ac7c3c4c118a58fb5dbb9e22@geth-1.geth.geth.svc.cluster.local:30303",
+      "enode://6bff8910d9fb329be3a46b0af3f6cc781c6b0c9ead33608992dc490b574e0f053d61557a8e2bc28376f512006fe132826466211f7418f6755747f56b8e889ae5@geth-2.geth.geth.svc.cluster.local:30303"
+    ]
