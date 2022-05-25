@@ -1,0 +1,121 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: validator
+  namespace: besu
+  labels:
+    app.kubernetes.io/name: besu
+    app.kubernetes.io/component: validator
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: besu
+      app.kubernetes.io/component: validator
+  serviceName: validator
+  replicas: 4
+  template:
+    metadata:
+      annotations:
+        kubectl.kubernetes.io/default-container: besu
+      labels:
+        app.kubernetes.io/name: besu
+        app.kubernetes.io/component: validator
+    spec:
+      securityContext:
+        fsGroup: 1000
+      containers:
+        - name: besu
+          securityContext: {}
+          image: hyperledger/besu:22.4.1
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: data
+              mountPath: /data
+            - name: validator-config
+              mountPath: /etc/besu/config.toml
+              subPath: config.toml
+            - name: genesis
+              mountPath: /config/genesis.json
+              subPath: genesis.json
+            - name: nodes
+              mountPath: /config/static-nodes.json
+              subPath: static-nodes.json
+            - name: nodes
+              mountPath: /config/permissioned-nodes.toml
+              subPath: permissioned-nodes.toml
+            - name: validator-secret
+              mountPath: /keys/nodekey
+              subPathExpr: $(POD_NAME).nodekey
+            # - name: validator
+            #   mountPath: /data/keystore/node-account
+            #   subPathExpr: $(POD_NAME).accountKeystore
+          ports:
+            - name: json-rpc
+              containerPort: 8545
+              protocol: TCP
+            - name: ws
+              containerPort: 8546
+              protocol: TCP
+            - name: graphql
+              containerPort: 8547
+              protocol: TCP
+            - name: rlpx
+              containerPort: 30303
+              protocol: TCP
+            - name: discovery
+              containerPort: 30303
+              protocol: UDP
+            - name: metrics
+              containerPort: 9545
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /liveness
+              port: 8545
+            initialDelaySeconds: 180
+            periodSeconds: 60
+          resources: {}
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.name
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+          command:
+            - /bin/sh
+            - -ce
+          args:
+            - |
+              /opt/besu/bin/besu \
+              --config-file=/etc/besu/config.toml \
+              --Xdns-enabled=true --Xdns-update-enabled=true
+      volumes:
+        - name: validator-config
+          configMap:
+            name: validator
+        - name: genesis
+          configMap:
+            name: genesis
+        - name: nodes
+          configMap:
+            name: nodes
+        - name: validator-secret
+          secret:
+            secretName: validator
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+        labels:
+          app.kubernetes.io/name: besu
+          app.kubernetes.io/component: validator
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: '1Gi'

@@ -1,0 +1,55 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: genesis
+  namespace: besu
+  labels:
+    app.kubernetes.io/name: besu
+    app.kubernetes.io/component: config
+data:
+  genesis.json: |
+    {
+      "nonce": "0x0",
+      "timestamp": "0x58ee40ba",
+      "extraData": "0xf87aa00000000000000000000000000000000000000000000000000000000000000000f8549406a909ccd7074bc694e4aeda497e0d40ea01189294b18a5b39a3a3fd098e371873514378c7ac132ad194bdc252b2fc0e76e07cd7f43306604666577082eb94c1fb7cf0cb65d73dfd89ca16063198548fb8865cc080c0",
+      "gasLimit": "0xffff",
+      "gasUsed": "0x0",
+      "number": "0x0",
+      "difficulty": "0x1",
+      "coinbase": "0x0000000000000000000000000000000000000000",
+      "mixHash": "0x63746963616c2062797a616e74696e65206661756c7420746f6c6572616e6365",
+      "parentHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+      "config": {
+        "chainId": 1337,
+        "homesteadBlock": 0,
+        "eip150Block": 0,
+        "eip150Hash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "eip155Block": 0,
+        "eip158Block": 0,
+        "byzantiumBlock": 0,
+        "constantinopleBlock": 0,
+        "qbft": {
+          "blockperiodseconds": 5,
+          "epochlength": 30000,
+          "requesttimeoutseconds": 10
+        }
+      },
+      "alloc": {
+        "0xafc63488b205e0658a9045ad8b02f310fed6d635": {
+          "balance": "1000000000000000000000000000"
+        },
+        "0x908077d17695644d909585ac865f1acd3f35edac": {
+          "balance": "1000000000000000000000000000"
+        },
+        "0x77f1452d68e5924094629be53137e828ce7d7b27": {
+          "balance": "1000000000000000000000000000"
+        },
+        "0xf57f13a5112aa2882b2d82810fb8990b23ef6377": {
+          "balance": "1000000000000000000000000000"
+        },
+        "0xa5abf7960b50d0ecc0459d2994770084c4141470": {
+          "balance": "1000000000000000000000000000"
+        }
+      }
+    }

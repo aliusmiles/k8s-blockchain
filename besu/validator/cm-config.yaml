@@ -1,0 +1,73 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: validator
+  namespace: besu
+  labels:
+    app.kubernetes.io/name: besu
+    app.kubernetes.io/component: validator
+data:
+  config.toml: |-
+    # network
+    network-id="1337"
+
+    # gas
+    min-gas-price=0
+
+    # data
+    data-path="/data"
+    logging="INFO"
+
+    genesis-file="/config/genesis.json"
+    host-whitelist=["*"]
+    node-private-key-file="/keys/nodekey"
+
+    # p2p
+    p2p-host="0.0.0.0"
+    p2p-port=30303
+    max-peers=25
+
+    # rpc
+    rpc-http-enabled=true
+    rpc-http-host="0.0.0.0"
+    rpc-http-port=8545
+    rpc-http-api=["ADMIN", "DEBUG", "NET", "ETH", "MINER", "WEB3", "QBFT", "CLIQUE", "EEA", "IBFT"]
+    rpc-http-cors-origins=["all"]
+
+    # ws
+    rpc-ws-enabled=true
+    rpc-ws-host="0.0.0.0"
+    rpc-ws-port=8546
+    rpc-ws-api=["ADMIN", "DEBUG", "NET", "ETH", "MINER", "WEB3", "QBFT", "CLIQUE", "EEA", "IBFT"]
+
+    # graphql
+    graphql-http-enabled=true
+    graphql-http-host="0.0.0.0"
+    graphql-http-port=8547
+    graphql-http-cors-origins=["all"]
+
+    # metrics
+    metrics-enabled=true
+    metrics-host="0.0.0.0"
+    metrics-port=9545
+
+    # privacy
+    # privacy-enabled=true
+    # privacy-url="http://<HOST>:<PORT>"
+    # privacy-public-key-file=""
+
+    # bootnodes
+    # bootnodes=[
+    #   "enode://a23a68b9d7c39d652b862f1ec2c7a036b5b9d23b08397a085729086eff522bc9880ec9440829619ae70d4efb8e9470b14977b2b72390c46d3a690c85d24c4d58@validator-0.validator.besu.svc.cluster.local:30303",
+    #   "enode://117d06b7574f9da7210771ca31aa2d36c4d03e22c02d09a6799c6b34eabb7456a3c9c05281da89d93f0c1deacc0042dbd3378fc5f6422502c81911ef6163c7f0@validator-1.validator.besu.svc.cluster.local:30303",
+    #   "enode://91085abf3a5a2aa08a9b8c1cfd05fd201831161b090462c3534cefaaefa28587afa617ebd6bf1fb5d6a6f67de8d2b573183e0b6fe1a29254f11546db9df7d070@validator-2.validator.besu.svc.cluster.local:30303",
+    #   "enode://2021fdc290c0047f925cd6ea983f7cf34d967807ce6907a6e7cf0fe5bd7729362f6c48f3a1a33b6926332b53bca8bb62f4ad616f283c6548150eda4a05b30c26@validator-3.validator.besu.svc.cluster.local:30303"
+    # ]
+
+    # permissions
+    permissions-nodes-config-file-enabled=true
+    permissions-nodes-config-file="/config/permissioned-nodes.toml"
+
+    # static nodes
+    static-nodes-file="/config/static-nodes.json"
