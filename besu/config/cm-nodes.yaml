@@ -10,15 +10,15 @@ metadata:
 data:
   static-nodes.json: |-
     [
-      "enode://a23a68b9d7c39d652b862f1ec2c7a036b5b9d23b08397a085729086eff522bc9880ec9440829619ae70d4efb8e9470b14977b2b72390c46d3a690c85d24c4d58@validator-0.validator.besu.svc.cluster.local:30303",
-      "enode://117d06b7574f9da7210771ca31aa2d36c4d03e22c02d09a6799c6b34eabb7456a3c9c05281da89d93f0c1deacc0042dbd3378fc5f6422502c81911ef6163c7f0@validator-1.validator.besu.svc.cluster.local:30303",
-      "enode://91085abf3a5a2aa08a9b8c1cfd05fd201831161b090462c3534cefaaefa28587afa617ebd6bf1fb5d6a6f67de8d2b573183e0b6fe1a29254f11546db9df7d070@validator-2.validator.besu.svc.cluster.local:30303",
-      "enode://2021fdc290c0047f925cd6ea983f7cf34d967807ce6907a6e7cf0fe5bd7729362f6c48f3a1a33b6926332b53bca8bb62f4ad616f283c6548150eda4a05b30c26@validator-3.validator.besu.svc.cluster.local:30303"
+      "enode://595cae33a17f07ec8f0ae25a60192a12c0829a4cb804d6a4ace4118e40d79bf4ae2d08331cbe0b2981dd5da97b3e78c16e33bf0cd9ca6bdde9bfcf3c0ac8f268@validator-0.validator.besu.svc.cluster.local:30303",
+      "enode://d4ded0d39010d8eaba963ce249b65e17f3a5edd4751fe3588d9beb762430b4b169bd22676015cbd54fd9e8a26b34bd69848635f4f5b76e83b426a6ece75d604a@validator-1.validator.besu.svc.cluster.local:30303",
+      "enode://f87b356c1f3e5db046b014aee4d69c029d6c3a4bc22a191bdc7e0023c77a3d83c98b889a133d37e0cc698357fb4193e376833683b44fa91af36a6703df33251e@validator-2.validator.besu.svc.cluster.local:30303",
+      "enode://e637157de76fb575f8fa605dd581bec0fa8f019ab171f3c16499ee91b074dd34fb1de59666e7f2ead3d6f492fd2e3550bce9a7f1c0ac8c76ebe03177044ce5da@validator-3.validator.besu.svc.cluster.local:30303"
     ]
   permissioned-nodes.toml: |-
     nodes-allowlist=[
-      "enode://a23a68b9d7c39d652b862f1ec2c7a036b5b9d23b08397a085729086eff522bc9880ec9440829619ae70d4efb8e9470b14977b2b72390c46d3a690c85d24c4d58@validator-0.validator.besu.svc.cluster.local:30303",
-      "enode://117d06b7574f9da7210771ca31aa2d36c4d03e22c02d09a6799c6b34eabb7456a3c9c05281da89d93f0c1deacc0042dbd3378fc5f6422502c81911ef6163c7f0@validator-1.validator.besu.svc.cluster.local:30303",
-      "enode://91085abf3a5a2aa08a9b8c1cfd05fd201831161b090462c3534cefaaefa28587afa617ebd6bf1fb5d6a6f67de8d2b573183e0b6fe1a29254f11546db9df7d070@validator-2.validator.besu.svc.cluster.local:30303",
-      "enode://2021fdc290c0047f925cd6ea983f7cf34d967807ce6907a6e7cf0fe5bd7729362f6c48f3a1a33b6926332b53bca8bb62f4ad616f283c6548150eda4a05b30c26@validator-3.validator.besu.svc.cluster.local:30303"
+      "enode://595cae33a17f07ec8f0ae25a60192a12c0829a4cb804d6a4ace4118e40d79bf4ae2d08331cbe0b2981dd5da97b3e78c16e33bf0cd9ca6bdde9bfcf3c0ac8f268@validator-0.validator.besu.svc.cluster.local:30303",
+      "enode://d4ded0d39010d8eaba963ce249b65e17f3a5edd4751fe3588d9beb762430b4b169bd22676015cbd54fd9e8a26b34bd69848635f4f5b76e83b426a6ece75d604a@validator-1.validator.besu.svc.cluster.local:30303",
+      "enode://f87b356c1f3e5db046b014aee4d69c029d6c3a4bc22a191bdc7e0023c77a3d83c98b889a133d37e0cc698357fb4193e376833683b44fa91af36a6703df33251e@validator-2.validator.besu.svc.cluster.local:30303",
+      "enode://e637157de76fb575f8fa605dd581bec0fa8f019ab171f3c16499ee91b074dd34fb1de59666e7f2ead3d6f492fd2e3550bce9a7f1c0ac8c76ebe03177044ce5da@validator-3.validator.besu.svc.cluster.local:30303"
     ]
