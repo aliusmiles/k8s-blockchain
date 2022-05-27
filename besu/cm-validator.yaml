@@ -36,26 +36,15 @@ data:
     rpc-http-cors-origins=["all"]
 
     # ws
-    rpc-ws-enabled=true
-    rpc-ws-host="0.0.0.0"
-    rpc-ws-port=8546
-    rpc-ws-api=["ADMIN", "DEBUG", "NET", "ETH", "MINER", "WEB3", "QBFT", "CLIQUE", "EEA", "IBFT"]
+    rpc-ws-enabled=false
 
     # graphql
-    graphql-http-enabled=true
-    graphql-http-host="0.0.0.0"
-    graphql-http-port=8547
-    graphql-http-cors-origins=["all"]
+    graphql-http-enabled=false
 
     # metrics
     metrics-enabled=true
     metrics-host="0.0.0.0"
     metrics-port=9545
-
-    # privacy
-    # privacy-enabled=true
-    # privacy-url="http://<HOST>:<PORT>"
-    # privacy-public-key-file=""
 
     # permissions
     permissions-nodes-config-file-enabled=true
@@ -63,3 +52,6 @@ data:
 
     # static nodes
     static-nodes-file="/config/static-nodes.json"
+
+    # miner
+    # miner-enabled=true

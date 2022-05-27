@@ -1,0 +1,125 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: member-a
+  namespace: besu
+  labels:
+    app.kubernetes.io/name: besu
+    app.kubernetes.io/component: member-a
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: besu
+      app.kubernetes.io/component: member-a
+  serviceName: member-a
+  replicas: 2
+  template:
+    metadata:
+      annotations:
+        kubectl.kubernetes.io/default-container: besu
+      labels:
+        app.kubernetes.io/name: besu
+        app.kubernetes.io/component: member-a
+    spec:
+      securityContext:
+        fsGroup: 1000
+      containers:
+        - name: besu
+          securityContext: {}
+          image: hyperledger/besu:22.4.1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: json-rpc
+              containerPort: 8545
+              protocol: TCP
+            - name: ws
+              containerPort: 8546
+              protocol: TCP
+            - name: graphql
+              containerPort: 8547
+              protocol: TCP
+            - name: rlpx
+              containerPort: 30303
+              protocol: TCP
+            - name: discovery
+              containerPort: 30303
+              protocol: UDP
+            - name: metrics
+              containerPort: 9545
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /liveness
+              port: 8545
+            initialDelaySeconds: 180
+            periodSeconds: 60
+          resources: {}
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.name
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+          volumeMounts:
+            - name: data
+              mountPath: /data
+            - name: member-a-config
+              mountPath: /config/config.toml
+              subPath: config.toml
+            - name: member-a-config
+              mountPath: /config/config.json
+              subPath: config.json
+            - name: shared-config
+              mountPath: /config/genesis.json
+              subPath: genesis.json
+            - name: shared-config
+              mountPath: /config/static-nodes.json
+              subPath: static-nodes.json
+            - name: shared-config
+              mountPath: /config/permissioned-nodes.toml
+              subPath: permissioned-nodes.toml
+            - name: member-a-secret
+              mountPath: /keys/nodekey
+              subPathExpr: $(POD_NAME).nodekey
+            - name: member-a-secret
+              mountPath: /keys/tessera.key
+              subPathExpr: $(POD_NAME).tessera.key
+            - name: member-a-secret
+              mountPath: /keys/tessera.pub
+              subPathExpr: $(POD_NAME).tessera.pub
+            # - name: member-a
+            #   mountPath: /data/keystore/node-account
+            #   subPathExpr: $(POD_NAME).accountKeystore
+          command:
+            - /bin/sh
+            - -ce
+          args:
+            - |
+              /opt/besu/bin/besu --config-file=/config/config.toml --Xdns-enabled=true --Xdns-update-enabled=true
+      volumes:
+        - name: member-a-config
+          configMap:
+            name: member-a
+        - name: shared-config
+          configMap:
+            name: config
+        - name: member-a-secret
+          secret:
+            secretName: member-a
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+        labels:
+          app.kubernetes.io/name: besu
+          app.kubernetes.io/component: member-a
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: '1Gi'

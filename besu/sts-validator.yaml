@@ -29,36 +29,9 @@ spec:
           securityContext: {}
           image: hyperledger/besu:22.4.1
           imagePullPolicy: IfNotPresent
-          volumeMounts:
-            - name: data
-              mountPath: /data
-            - name: validator-config
-              mountPath: /etc/besu/config.toml
-              subPath: config.toml
-            - name: genesis
-              mountPath: /config/genesis.json
-              subPath: genesis.json
-            - name: nodes
-              mountPath: /config/static-nodes.json
-              subPath: static-nodes.json
-            - name: nodes
-              mountPath: /config/permissioned-nodes.toml
-              subPath: permissioned-nodes.toml
-            - name: validator-secret
-              mountPath: /keys/nodekey
-              subPathExpr: $(POD_NAME).nodekey
-            # - name: validator
-            #   mountPath: /data/keystore/node-account
-            #   subPathExpr: $(POD_NAME).accountKeystore
           ports:
             - name: json-rpc
               containerPort: 8545
-              protocol: TCP
-            - name: ws
-              containerPort: 8546
-              protocol: TCP
-            - name: graphql
-              containerPort: 8547
               protocol: TCP
             - name: rlpx
               containerPort: 30303
@@ -86,24 +59,37 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: status.podIP
+          volumeMounts:
+            - name: data
+              mountPath: /data
+            - name: validator-config
+              mountPath: /config/config.toml
+              subPath: config.toml
+            - name: shared-config
+              mountPath: /config/genesis.json
+              subPath: genesis.json
+            - name: shared-config
+              mountPath: /config/static-nodes.json
+              subPath: static-nodes.json
+            - name: shared-config
+              mountPath: /config/permissioned-nodes.toml
+              subPath: permissioned-nodes.toml
+            - name: validator-secret
+              mountPath: /keys/nodekey
+              subPathExpr: $(POD_NAME).nodekey
           command:
             - /bin/sh
             - -ce
           args:
             - |
-              /opt/besu/bin/besu \
-              --config-file=/etc/besu/config.toml \
-              --Xdns-enabled=true --Xdns-update-enabled=true
+              /opt/besu/bin/besu --config-file=/config/config.toml --Xdns-enabled=true --Xdns-update-enabled=true
       volumes:
         - name: validator-config
           configMap:
             name: validator
-        - name: genesis
+        - name: shared-config
           configMap:
-            name: genesis
-        - name: nodes
-          configMap:
-            name: nodes
+            name: config
         - name: validator-secret
           secret:
             secretName: validator
