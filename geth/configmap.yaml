@@ -6,6 +6,7 @@ metadata:
   namespace: geth
   labels:
     app.kubernetes.io/name: geth
+    app.kubernetes.io/component: config
 data:
   genesis.json: |
     {
@@ -31,7 +32,9 @@ data:
 
   static-nodes.json: |-
     [
-      "enode://49df68a76ae0a009978a0ebb4cf8ef14aaaee30d88deff829091a82fed47d12d3173fa54c067937bda90b6887f54f62271141a3ca096fcd0a0896cc99f82906e@geth-0.geth.geth.svc.cluster.local:30303",
-      "enode://07903cca8cde06871119b16074d930edb5f42efb38a6ea20d1acc46d45607aae6776eb18d51941416f34b119ba0b631dbfa50a92ac7c3c4c118a58fb5dbb9e22@geth-1.geth.geth.svc.cluster.local:30303",
-      "enode://6bff8910d9fb329be3a46b0af3f6cc781c6b0c9ead33608992dc490b574e0f053d61557a8e2bc28376f512006fe132826466211f7418f6755747f56b8e889ae5@geth-2.geth.geth.svc.cluster.local:30303"
+      "enode://49df68a76ae0a009978a0ebb4cf8ef14aaaee30d88deff829091a82fed47d12d3173fa54c067937bda90b6887f54f62271141a3ca096fcd0a0896cc99f82906e@signer-0.signer.geth.svc.cluster.local:30303",
+      "enode://07903cca8cde06871119b16074d930edb5f42efb38a6ea20d1acc46d45607aae6776eb18d51941416f34b119ba0b631dbfa50a92ac7c3c4c118a58fb5dbb9e22@signer-1.signer.geth.svc.cluster.local:30303",
+      "enode://6bff8910d9fb329be3a46b0af3f6cc781c6b0c9ead33608992dc490b574e0f053d61557a8e2bc28376f512006fe132826466211f7418f6755747f56b8e889ae5@signer-2.signer.geth.svc.cluster.local:30303",
+      "enode://6508daba338be071a996a946cf93f9054570d586e4419071d1a95d1e02779ecc49772a2a78afd09f74ae021186215be26391ab8dd96ca94944085dd06b85b3e5@rpc-0.rpc.geth.svc.cluster.local:30303",
+      "enode://42df63e8f6e527c41eaa7cdbac1a2534a1dc66e7635d74905e43c8322e157de5be903a2d7e2f098771e863b9d5d53c8cc2e9270d8b2cc595890220a60e522fb2@rpc-1.rpc.geth.svc.cluster.local:30303"
     ]

@@ -2,22 +2,25 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: geth
+  name: signer
   namespace: geth
   labels:
     app.kubernetes.io/name: geth
+    app.kubernetes.io/component: signer
 spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: geth
-  serviceName: geth
-  replicas: 3
+      app.kubernetes.io/component: signer
+  serviceName: signer
+  replicas: 2
   template:
     metadata:
       annotations:
         kubectl.kubernetes.io/default-container: geth
       labels:
         app.kubernetes.io/name: geth
+        app.kubernetes.io/component: signer
     spec:
       securityContext:
         runAsUser: 1000
@@ -27,36 +30,9 @@ spec:
         - name: geth
           image: ethereum/client-go:release-1.10
           imagePullPolicy: IfNotPresent
-          volumeMounts:
-            - name: data
-              mountPath: /data
-            - name: geth-config
-              mountPath: /config/genesis.json
-              subPath: genesis.json
-            - name: geth-config
-              mountPath: /data/static-nodes.json
-              subPath: static-nodes.json
-            - name: geth-secret
-              mountPath: /secrets/nodekey
-              subPathExpr: $(POD_NAME).nodekey
-            - name: geth-secret
-              mountPath: /secrets/keystore/account
-              subPathExpr: $(POD_NAME).account
-            - name: geth-secret
-              mountPath: /secrets/account.address
-              subPathExpr: $(POD_NAME).address
-            - name: geth-secret
-              mountPath: /secrets/account.password
-              subPathExpr: $(POD_NAME).password
           ports:
             - name: json-rpc
               containerPort: 8545
-              protocol: TCP
-            - name: ws
-              containerPort: 8546
-              protocol: TCP
-            - name: graphql
-              containerPort: 8547
               protocol: TCP
             - name: rlpx
               containerPort: 30303
@@ -79,6 +55,27 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: status.podIP
+          volumeMounts:
+            - name: data
+              mountPath: /data
+            - name: geth-config
+              mountPath: /config/genesis.json
+              subPath: genesis.json
+            - name: geth-config
+              mountPath: /data/static-nodes.json
+              subPath: static-nodes.json
+            - name: geth-secret
+              mountPath: /secrets/nodekey
+              subPathExpr: $(POD_NAME).nodekey
+            - name: geth-secret
+              mountPath: /secrets/keystore/account
+              subPathExpr: $(POD_NAME).account
+            - name: geth-secret
+              mountPath: /secrets/account.address
+              subPathExpr: $(POD_NAME).address
+            - name: geth-secret
+              mountPath: /secrets/account.password
+              subPathExpr: $(POD_NAME).password
           command:
             - /bin/sh
             - -ce
@@ -98,7 +95,6 @@ spec:
               --networkid 1192 \
               --port 30303 \
               --http --http.addr 0.0.0.0 --http.port 8545 --http.corsdomain "*" --http.vhosts "*" --http.api "admin,personal,eth,net,web3,txpool,miner,clique,debug" \
-              --ws --ws.addr 0.0.0.0 --ws.port 8546 --ws.origins "*" --ws.api "admin,personal,eth,net,web3,txpool,miner,clique,debug" \
               --allow-insecure-unlock --unlock $(cat /secrets/account.address) --password /secrets/account.password
       volumes:
         - name: geth-config
@@ -112,6 +108,7 @@ spec:
         name: data
         labels:
           app.kubernetes.io/name: geth
+          app.kubernetes.io/component: signer
       spec:
         accessModes:
           - ReadWriteOnce

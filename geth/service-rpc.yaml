@@ -1,0 +1,36 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rpc
+  namespace: geth
+  labels:
+    app.kubernetes.io/name: geth
+    app.kubernetes.io/component: rpc
+spec:
+  type: ClusterIP
+  clusterIP: None
+  selector:
+    app.kubernetes.io/name: geth
+    app.kubernetes.io/component: rpc
+  ports:
+    - name: json-rpc
+      port: 8545
+      targetPort: json-rpc
+      protocol: TCP
+    - name: ws
+      port: 8546
+      targetPort: ws
+      protocol: TCP
+    - name: graphql
+      port: 8547
+      targetPort: graphql
+      protocol: TCP
+    - name: rlpx
+      port: 30303
+      targetPort: rlpx
+      protocol: TCP
+    - name: metrics
+      port: 6060
+      targetPort: metrics
+      protocol: TCP
