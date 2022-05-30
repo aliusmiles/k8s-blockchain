@@ -11,6 +11,7 @@ resources:
 - sts-rpc.yaml
 - sts-validator.yaml
 - ingress.yaml
+- blockscout.yaml
 
 images:
   - name: quorumengineering/quorum

@@ -13,6 +13,14 @@ spec:
     app.kubernetes.io/name: quorum
     app.kubernetes.io/component: validator
   ports:
+    - name: json-rpc
+      port: 8545
+      targetPort: json-rpc
+      protocol: TCP
+    - name: ws
+      port: 8546
+      targetPort: ws
+      protocol: TCP
     - name: rlpx
       port: 30303
       targetPort: rlpx
