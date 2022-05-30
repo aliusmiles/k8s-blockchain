@@ -1,0 +1,123 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: validator
+  namespace: quorum
+  labels:
+    app.kubernetes.io/name: quorum
+    app.kubernetes.io/component: validator
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: quorum
+      app.kubernetes.io/component: validator
+  serviceName: validator
+  replicas: 4
+  template:
+    metadata:
+      annotations:
+        kubectl.kubernetes.io/default-container: quorum
+      labels:
+        app.kubernetes.io/name: quorum
+        app.kubernetes.io/component: validator
+    spec:
+      containers:
+        - name: quorum
+          securityContext: {}
+          image: quorumengineering/quorum
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: json-rpc
+              containerPort: 8545
+              protocol: TCP
+            - name: rlpx
+              containerPort: 30303
+              protocol: TCP
+            - name: discovery
+              containerPort: 30303
+              protocol: UDP
+            - name: metrics
+              containerPort: 6060
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8545
+            initialDelaySeconds: 180
+            periodSeconds: 60
+          resources: {}
+          env:
+            - name: PRIVATE_CONFIG
+              value: 'ignore'
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.name
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+          volumeMounts:
+            - name: data
+              mountPath: /data
+            - name: quorum-config
+              mountPath: /config/genesis.json
+              subPath: genesis.json
+            - name: quorum-config
+              mountPath: /data/static-nodes.json
+              subPath: static-nodes.json
+            - name: quorum-secret
+              mountPath: /secrets/nodekey
+              subPathExpr: $(POD_NAME).nodekey
+            - name: quorum-secret
+              mountPath: /secrets/keystore/account
+              subPathExpr: $(POD_NAME).account
+            - name: quorum-secret
+              mountPath: /secrets/account.address
+              subPathExpr: $(POD_NAME).address
+            - name: quorum-secret
+              mountPath: /secrets/account.password
+              subPathExpr: $(POD_NAME).password
+          command:
+            - /bin/sh
+            - -ce
+          args:
+            - |
+              exec
+              geth --datadir /data init /config/genesis.json
+
+              geth \
+              --datadir /data \
+              --keystore /secrets/keystore \
+              --nodekey /secrets/nodekey \
+              --nodiscover --ipcdisable \
+              --nat extip:$POD_IP \
+              --verbosity 5 \
+              --istanbul.blockperiod 5 --mine --miner.threads 1 --miner.gasprice 0 --emitcheckpoints \
+              --syncmode full \
+              --metrics --pprof --pprof.addr "0.0.0.0" --pprof.port 6060 \
+              --networkid 1337 \
+              --port 30303 \
+              --http --http.addr 0.0.0.0 --http.port 8545 --http.corsdomain "*" --http.vhosts "*" --http.api "admin,db,eth,debug,miner,net,shh,txpool,personal,web3,quorum,istanbul" \
+              --allow-insecure-unlock --unlock $(cat /secrets/account.address) --password /secrets/account.password
+      volumes:
+        - name: quorum-config
+          configMap:
+            name: quorum
+        - name: quorum-secret
+          secret:
+            secretName: quorum
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+        labels:
+          app.kubernetes.io/name: quorum
+          app.kubernetes.io/component: validator
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: '1Gi'

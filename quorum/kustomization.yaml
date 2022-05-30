@@ -1,0 +1,22 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: quorum
+
+resources:
+- namespace.yaml
+- configmap.yaml
+- secret.yaml
+- service-rpc.yaml
+- service-validator.yaml
+- sts-rpc.yaml
+- sts-validator.yaml
+- ingress.yaml
+
+images:
+  - name: quorumengineering/quorum
+    newTag: 22.4.3
+  # - name: quorumengineering/tessera
+  #   newTag: 22.1.2
+
+commonLabels:
+  app.kubernetes.io/name: quorum

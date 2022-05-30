@@ -1,0 +1,76 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: quorum
+  labels:
+    app.kubernetes.io/name: quorum
+    app.kubernetes.io/component: config
+data:
+  genesis.json: |
+    {
+      "nonce": "0x0",
+      "timestamp": "0x58ee40ba",
+      "extraData": "0xf87aa00000000000000000000000000000000000000000000000000000000000000000f8549413c0bdeffafa044f98c08be0562e30e09f207fab944e550f7ee30c253c7523a65e1a2dd3e2011aa65894ba070666eae045fed8983824f8012933d78d975694d36d98bad8a13b219653bcb3d95d81aa839fc79ac080c0",
+      "gasLimit": "0xffff",
+      "gasUsed": "0x0",
+      "number": "0x0",
+      "difficulty": "0x1",
+      "coinbase": "0x0000000000000000000000000000000000000000",
+      "mixHash": "0x63746963616c2062797a616e74696e65206661756c7420746f6c6572616e6365",
+      "parentHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+      "config": {
+        "chainId": 1337,
+        "homesteadBlock": 0,
+        "eip150Block": 0,
+        "eip150Hash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "eip155Block": 0,
+        "eip158Block": 0,
+        "byzantiumBlock": 0,
+        "constantinopleBlock": 0,
+        "isQuorum": true,
+        "maxCodeSizeConfig": [
+          {
+            "block": 0,
+            "size": 64
+          }
+        ],
+        "txnSizeLimit": 64,
+        "istanbul": {
+          "policy": 0,
+          "epoch": 30000,
+          "ceil2Nby3Block": 0,
+          "testQBFTBlock": 0
+        }
+      },
+      "alloc": {
+        "0x75284019ef8ec639558f46394847625c3ddfd9f9": {
+          "balance": "1000000000000000000000000000"
+        },
+        "0x081cc164599244398a3d5d9950f0aa83d4b6b1db": {
+          "balance": "1000000000000000000000000000"
+        },
+        "0xbc00e3a6d0bf60fab2bc44660232494a5e50c753": {
+          "balance": "1000000000000000000000000000"
+        },
+        "0x0b2cd4d169bb99f016b2cfce18954c15275c2eed": {
+          "balance": "1000000000000000000000000000"
+        },
+        "0x98598773db17d00495e80d764bc3337568778f8b": {
+          "balance": "1000000000000000000000000000"
+        },
+        "0x486d5fddbf0478904b2b150925308c5a19457e32": {
+          "balance": "1000000000000000000000000000"
+        }
+      }
+    }
+
+  static-nodes.json: |
+    [
+      "enode://a23a68b9d7c39d652b862f1ec2c7a036b5b9d23b08397a085729086eff522bc9880ec9440829619ae70d4efb8e9470b14977b2b72390c46d3a690c85d24c4d58@validator-0.validator.quorum.svc.cluster.local:30303?discport=0",
+      "enode://117d06b7574f9da7210771ca31aa2d36c4d03e22c02d09a6799c6b34eabb7456a3c9c05281da89d93f0c1deacc0042dbd3378fc5f6422502c81911ef6163c7f0@validator-1.validator.quorum.svc.cluster.local:30303?discport=0",
+      "enode://91085abf3a5a2aa08a9b8c1cfd05fd201831161b090462c3534cefaaefa28587afa617ebd6bf1fb5d6a6f67de8d2b573183e0b6fe1a29254f11546db9df7d070@validator-2.validator.quorum.svc.cluster.local:30303?discport=0",
+      "enode://2021fdc290c0047f925cd6ea983f7cf34d967807ce6907a6e7cf0fe5bd7729362f6c48f3a1a33b6926332b53bca8bb62f4ad616f283c6548150eda4a05b30c26@validator-3.validator.quorum.svc.cluster.local:30303?discport=0",
+      "enode://dc7bd94422de18969a477275e47c5ea226dd397d7d958beedcb31ef6b116015692123b37c9f870a05b188c881dffd8cf07439fa535c3add54edaae8e0c98df59@rpc-0.rpc.quorum.svc.cluster.local:30303?discport=0",
+      "enode://1e380f934b7f891fe27f0dfc8f3f9a331154596625f159dd5f62b56274d065eecfbd6a9d23994f88d21d2ab3e89560ea06d38581f4e0ac5b789afe556ed970ad@rpc-1.rpc.quorum.svc.cluster.local:30303?discport=0"
+    ]
