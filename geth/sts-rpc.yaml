@@ -37,12 +37,12 @@ spec:
             - name: ws
               containerPort: 8546
               protocol: TCP
-            - name: graphql
-              containerPort: 8547
-              protocol: TCP
             - name: rlpx
               containerPort: 30303
               protocol: TCP
+            - name: discovery
+              containerPort: 30303
+              protocol: UDP
             - name: metrics
               containerPort: 6060
               protocol: TCP
@@ -73,15 +73,6 @@ spec:
             - name: geth-secret
               mountPath: /secrets/nodekey
               subPathExpr: $(POD_NAME).nodekey
-            - name: geth-secret
-              mountPath: /secrets/keystore/account
-              subPathExpr: $(POD_NAME).account
-            - name: geth-secret
-              mountPath: /secrets/account.address
-              subPathExpr: $(POD_NAME).address
-            - name: geth-secret
-              mountPath: /secrets/account.password
-              subPathExpr: $(POD_NAME).password
           command:
             - /bin/sh
             - -ce
@@ -90,19 +81,16 @@ spec:
               geth --datadir /data init /config/genesis.json
               geth \
               --datadir /data \
-              --keystore /secrets/keystore \
               --nodekey /secrets/nodekey \
               --nodiscover --ipcdisable \
               --nat extip:$POD_IP \
               --verbosity 5 \
-              --mine --miner.threads 1 --miner.gasprice 0 \
               --syncmode full \
               --metrics --pprof --pprof.addr "0.0.0.0" --pprof.port 6060 \
               --networkid 1192 \
               --port 30303 \
-              --http --http.addr 0.0.0.0 --http.port 8545 --http.corsdomain "*" --http.vhosts "*" --http.api "admin,personal,eth,net,web3,txpool,miner,clique,debug" \
-              --ws --ws.addr 0.0.0.0 --ws.port 8546 --ws.origins "*" --ws.api "admin,personal,eth,net,web3,txpool,miner,clique,debug" \
-              --allow-insecure-unlock --unlock $(cat /secrets/account.address) --password /secrets/account.password
+              --http --http.addr 0.0.0.0 --http.port 8545 --http.corsdomain "*" --http.vhosts "*" --http.api "eth,net,web3" \
+              --ws --ws.addr 0.0.0.0 --ws.port 8546 --ws.origins "*" --ws.api "eth,net,web3"
       volumes:
         - name: geth-config
           configMap:

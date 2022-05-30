@@ -18,6 +18,10 @@ spec:
       port: 30303
       targetPort: rlpx
       protocol: TCP
+    - name: discovery
+      port: 30303
+      targetPort: discovery
+      protocol: UDP
     - name: metrics
       port: 6060
       targetPort: metrics

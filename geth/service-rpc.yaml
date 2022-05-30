@@ -22,14 +22,14 @@ spec:
       port: 8546
       targetPort: ws
       protocol: TCP
-    - name: graphql
-      port: 8547
-      targetPort: graphql
-      protocol: TCP
     - name: rlpx
       port: 30303
       targetPort: rlpx
       protocol: TCP
+    - name: discovery
+      port: 30303
+      targetPort: discovery
+      protocol: UDP
     - name: metrics
       port: 6060
       targetPort: metrics
