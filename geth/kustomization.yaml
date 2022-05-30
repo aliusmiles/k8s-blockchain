@@ -10,6 +10,7 @@ resources:
 - service-signer.yaml
 - sts-rpc.yaml
 - sts-signer.yaml
+- ingress.yaml
 
 images:
   - name: ethereum/client-go
