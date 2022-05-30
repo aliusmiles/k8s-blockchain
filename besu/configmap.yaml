@@ -1,0 +1,97 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: besu
+  namespace: besu
+  labels:
+    app.kubernetes.io/name: besu
+    app.kubernetes.io/component: config
+data:
+  genesis.json: |
+    {
+      "config" : {
+        "chainId" : 1337,
+        "londonBlock" : 0,
+        "qbft" : {
+          "blockperiodseconds" : 1,
+          "epochlength" : 30000,
+          "requesttimeoutseconds" : 4
+        }
+      },
+      "nonce" : "0x0",
+      "timestamp" : "0x58ee40ba",
+      "gasLimit" : "0x47b760",
+      "difficulty" : "0x1",
+      "mixHash" : "0x63746963616c2062797a616e74696e65206661756c7420746f6c6572616e6365",
+      "coinbase" : "0x0000000000000000000000000000000000000000",
+      "alloc" : {},
+      "extraData" : "0xf87aa00000000000000000000000000000000000000000000000000000000000000000f85494cd27335ce37f0066426f28abed284609a380132094389a5c29916f05fab5144b076292b05df3dae7619443a548cfb886271a057461c5c606f0d49c39707f949ec17da1a19b5134b388658fd99d8be962b5cf1ac080c0"
+    }
+
+  static-nodes.json: |-
+    []
+
+  config.toml: |-
+    # network
+    network-id="1337"
+
+    # gas
+    min-gas-price=0
+
+    # data
+    data-path="/data"
+    logging="INFO"
+
+    genesis-file="/config/genesis.json"
+    host-whitelist=["*"]
+    node-private-key-file="/keys/nodekey"
+
+    # p2p
+    p2p-host="0.0.0.0"
+    p2p-port=30303
+    max-peers=25
+    discovery-enabled=true
+
+    # rpc
+    rpc-http-enabled=true
+    rpc-http-host="0.0.0.0"
+    rpc-http-port=8545
+    rpc-http-api=["NET", "ETH", "WEB3"]
+    rpc-http-cors-origins=["all"]
+
+    # ws
+    rpc-ws-enabled=true
+    rpc-ws-host="0.0.0.0"
+    rpc-ws-port=8546
+    rpc-ws-api=["NET", "ETH", "WEB3"]
+
+    # graphql
+    graphql-http-enabled=true
+    graphql-http-host="0.0.0.0"
+    graphql-http-port=8547
+    graphql-http-cors-origins=["all"]
+
+    # metrics
+    metrics-enabled=true
+    metrics-host="0.0.0.0"
+    metrics-port=9545
+
+    # privacy
+    privacy-enabled=false
+
+    # permissions
+    permissions-nodes-config-file-enabled=false
+
+    # static nodes
+    static-nodes-file="/config/static-nodes.json"
+
+    # miner
+    miner-enabled=false
+
+    bootnodes=[
+      "enode://09fef197c6fdb70dae424707443044887aaf9cb69771d311d622f5fe03a76bc8daeddb49ae8521ba2566d5fa40c89a60db6d019eea001445b76302368170d5cb@validator-0.validator.besu.svc.cluster.local:30303",
+      "enode://0fcad9a0759c3d1da17d5144de354842d92804352fe7a0119741cf00a8f1e5345a21f8203ceb3f94f244ab739ac54839465f7a6caaacdc85fbb01a36c1f91744@validator-1.validator.besu.svc.cluster.local:30303",
+      "enode://f4193f57a797a55bc90fb30c71918882a55b50bbad347d60d262d942338165383003cdca242d76ecd3b6ba8ec61e68575ba87af36078ac506433843ba62cef77@validator-2.validator.besu.svc.cluster.local:30303",
+      "enode://d8a93e04345446c18888bc3441abd1ab5ad89ded2de4abb91d8cafd3ed429f5ca97d45002798edc6232c6dda89d2ee0f14dc296410c9b94ced7099cd6d5771e7@validator-3.validator.besu.svc.cluster.local:30303"
+    ]

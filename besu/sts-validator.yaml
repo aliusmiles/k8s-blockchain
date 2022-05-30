@@ -42,6 +42,10 @@ spec:
             - name: metrics
               containerPort: 9545
               protocol: TCP
+          # readinessProbe:
+          #   httpGet:
+          #     path: /readiness
+          #     port: 8545
           livenessProbe:
             httpGet:
               path: /liveness
@@ -59,40 +63,33 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: status.podIP
+            - name: BESU_IDENTITY
+              value: $(POD_NAME)
+            - name: BESU_RPC_HTTP_API
+              value: "ADMIN,DEBUG,NET,ETH,MINER,WEB3,QBFT,CLIQUE,EEA,IBFT"
+            - name: BESU_RPC_WS_ENABLED
+              value: "false"
+            - name: BESU_GRAPHQL_HTTP_ENABLED
+              value: "false"
           volumeMounts:
             - name: data
               mountPath: /data
-            - name: validator-config
-              mountPath: /config/config.toml
-              subPath: config.toml
-            - name: shared-config
-              mountPath: /config/genesis.json
-              subPath: genesis.json
-            - name: shared-config
-              mountPath: /config/static-nodes.json
-              subPath: static-nodes.json
-            - name: shared-config
-              mountPath: /config/permissioned-nodes.toml
-              subPath: permissioned-nodes.toml
-            - name: validator-secret
+            - name: besu-config
+              mountPath: /config
+            - name: besu-secret
               mountPath: /keys/nodekey
               subPathExpr: $(POD_NAME).nodekey
-          command:
-            - /bin/sh
-            - -ce
           args:
-            - |
-              /opt/besu/bin/besu --config-file=/config/config.toml --Xdns-enabled=true --Xdns-update-enabled=true
+            - --config-file=/config/config.toml
+            - --Xdns-enabled=true
+            - --Xdns-update-enabled=true
       volumes:
-        - name: validator-config
+        - name: besu-config
           configMap:
-            name: validator
-        - name: shared-config
-          configMap:
-            name: config
-        - name: validator-secret
+            name: besu
+        - name: besu-secret
           secret:
-            secretName: validator
+            secretName: besu
   volumeClaimTemplates:
     - metadata:
         name: data

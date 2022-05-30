@@ -2,17 +2,17 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: member-a
+  name: rpc
   namespace: besu
   labels:
     app.kubernetes.io/name: besu
-    app.kubernetes.io/component: member-a
+    app.kubernetes.io/component: rpc
 spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: besu
-      app.kubernetes.io/component: member-a
-  serviceName: member-a
+      app.kubernetes.io/component: rpc
+  serviceName: rpc
   replicas: 2
   template:
     metadata:
@@ -20,7 +20,7 @@ spec:
         kubectl.kubernetes.io/default-container: besu
       labels:
         app.kubernetes.io/name: besu
-        app.kubernetes.io/component: member-a
+        app.kubernetes.io/component: rpc
     spec:
       securityContext:
         fsGroup: 1000
@@ -48,6 +48,10 @@ spec:
             - name: metrics
               containerPort: 9545
               protocol: TCP
+          # readinessProbe:
+          #   httpGet:
+          #     path: /readiness
+          #     port: 8545
           livenessProbe:
             httpGet:
               path: /liveness
@@ -65,58 +69,33 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: status.podIP
+            - name: BESU_IDENTITY
+              value: $(POD_NAME)
           volumeMounts:
             - name: data
               mountPath: /data
-            - name: member-a-config
-              mountPath: /config/config.toml
-              subPath: config.toml
-            - name: member-a-config
-              mountPath: /config/config.json
-              subPath: config.json
-            - name: shared-config
-              mountPath: /config/genesis.json
-              subPath: genesis.json
-            - name: shared-config
-              mountPath: /config/static-nodes.json
-              subPath: static-nodes.json
-            - name: shared-config
-              mountPath: /config/permissioned-nodes.toml
-              subPath: permissioned-nodes.toml
-            - name: member-a-secret
+            - name: besu-config
+              mountPath: /config
+            - name: besu-secret
               mountPath: /keys/nodekey
               subPathExpr: $(POD_NAME).nodekey
-            - name: member-a-secret
-              mountPath: /keys/tessera.key
-              subPathExpr: $(POD_NAME).tessera.key
-            - name: member-a-secret
-              mountPath: /keys/tessera.pub
-              subPathExpr: $(POD_NAME).tessera.pub
-            # - name: member-a
-            #   mountPath: /data/keystore/node-account
-            #   subPathExpr: $(POD_NAME).accountKeystore
-          command:
-            - /bin/sh
-            - -ce
           args:
-            - |
-              /opt/besu/bin/besu --config-file=/config/config.toml --Xdns-enabled=true --Xdns-update-enabled=true
+            - --config-file=/config/config.toml
+            - --Xdns-enabled=true
+            - --Xdns-update-enabled=true
       volumes:
-        - name: member-a-config
+        - name: besu-config
           configMap:
-            name: member-a
-        - name: shared-config
-          configMap:
-            name: config
-        - name: member-a-secret
+            name: besu
+        - name: besu-secret
           secret:
-            secretName: member-a
+            secretName: besu
   volumeClaimTemplates:
     - metadata:
         name: data
         labels:
           app.kubernetes.io/name: besu
-          app.kubernetes.io/component: member-a
+          app.kubernetes.io/component: rpc
       spec:
         accessModes:
           - ReadWriteOnce
